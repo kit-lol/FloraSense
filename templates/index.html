@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloraSense</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="nav-button-container">
+                <button id="btnAbout" class="nav-button oval-button">Что такое FloraSense?</button>
+            </div>
+            <div class="logo-wrapper">
+                <a href="#" id="logoLink" class="logo">
+                    <svg class="wheat-left" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- здесь содержимое SVG-колоса -->
+                    </svg>
+                    <h1>FloraSense</h1>
+                    <svg class="wheat-right" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- здесь содержимое SVG-колоса -->
+                    </svg>
+                </a>
+            </div>
+            <div class="nav-button-container">
+                <button id="btnFeatures" class="nav-button oval-button">Наши преимущества</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="welcome" class="animated-section">
+            <h2>FloraSense — ваш надежный помощник в уходе за растениями!</h2>
+        </section>
+
+        <section id="about" class="hidden animated-section">
+            <h2>Что такое FloraSense?</h2>
+            <p>FloraSense — инновационный инструмент для быстрого и точного определения здоровья ваших растений.</p>
+            <p>Наш сервис поможет вам своевременно выявить болезни и сохранить урожай!</p>
+        </section>
+
+        <section id="features" class="hidden animated-section">
+            <h2>Наши преимущества:</h2>
+            <ul class="feature-list">
+                <li>⭐ Быстрая диагностика болезней растений</li>
+                <li>🏞️ Помогает сохранять урожай и улучшать здоровье сада</li>
+                <li>🌳 Основано на современных технологиях глубокого обучения</li>
+            </ul>
+        </section>
+
+        <!-- Форма для загрузки изображения -->
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <div class="upload-form">
+                <label for="fileInput" class="camera-icon">
+                    <i class="fas fa-camera"></i> Вставьте фотографию растения
+                </label>
+                <input type="file" id="fileInput" name="file" accept="image/*" hidden />
+                <button type="submit">Анализировать</button>
+            </div>
+        </form>
+
+        <!-- Блок для отображения результата -->
+        {% if segmentation_mask is not none and segmentation_mask.any() and predicted_class is not none %}
+        <div class="result">
+            <h2>Результат анализа</h2>
+            <p>Предсказанный класс: {{ predicted_class }}</p>
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ segmentation_mask }}" alt="Сегментированная маска">
+                <img src="data:image/png;base64,{{ original_image }}" alt="Исходное изображение">
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://t.me/kitlool" class="icon"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://vk.com/looooooooooooooooo0ol" class="icon"><i class="fab fa-vk"></i></a>
+            <a href="https://discordapp.com/users/665869528026185739" class="icon"><i class="fab fa-discord"></i></a>
+        </div>
+    </footer>
+
+    <!-- Подключаем JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

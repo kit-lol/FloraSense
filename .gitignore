@@ -1,0 +1,12 @@
+
+.idea/
+
+venv/
+
+__pycache__/
+
+data/
+
+data1/
+
+test_images/
