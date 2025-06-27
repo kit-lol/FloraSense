@@ -1,4 +1,4 @@
-/* Основные переменные цветов */
+* Основные переменные цветов */
 :root {
     --green-light: #AFECCB;
     --green-dark: #4E7963;
@@ -54,6 +54,7 @@ header {
 
 /* Логотип с двумя колосками */
 .logo-wrapper {
+    color: #E5D558;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,8 +100,8 @@ header h1 {
 
 /* Овал кнопки */
 .oval-button {
-    background: var(--gold);
-    border: 2px solid var(--gold);
+    background-color: #E5D558;
+    border: 2px solid #E5D558;
     border-radius: 50px;
     padding: 12px 25px;
     font-size: 1rem;
@@ -113,7 +114,7 @@ header h1 {
 }
 
 .oval-button:hover {
-    background: var(--gold-dark);
+    background-color: #e5d55889;
     color: white;
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);

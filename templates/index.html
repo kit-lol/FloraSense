@@ -14,14 +14,8 @@
                 <button id="btnAbout" class="nav-button oval-button">Что такое FloraSense?</button>
             </div>
             <div class="logo-wrapper">
-                <a href="#" id="logoLink" class="logo">
-                    <svg class="wheat-left" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <!-- здесь содержимое SVG-колоса -->
-                    </svg>
+                <a href="/" id="logoLink" class="logo">
                     <h1>FloraSense</h1>
-                    <svg class="wheat-right" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <!-- здесь содержимое SVG-колоса -->
-                    </svg>
                 </a>
             </div>
             <div class="nav-button-container">
@@ -50,39 +44,22 @@
             </ul>
         </section>
 
-        <!-- Форма для загрузки изображения -->
-        <form action="/predict" method="post" enctype="multipart/form-data">
-            <div class="upload-form">
-                <label for="fileInput" class="camera-icon">
-                    <i class="fas fa-camera"></i> Вставьте фотографию растения
-                </label>
-                <input type="file" id="fileInput" name="file" accept="image/*" hidden />
-                <button type="submit">Анализировать</button>
-            </div>
-        </form>
-
-        <!-- Блок для отображения результата -->
-        {% if segmentation_mask is not none and segmentation_mask.any() and predicted_class is not none %}
-        <div class="result">
-            <h2>Результат анализа</h2>
-            <p>Предсказанный класс: {{ predicted_class }}</p>
-            <div class="image-container">
-                <img src="data:image/png;base64,{{ segmentation_mask }}" alt="Сегментированная маска">
-                <img src="data:image/png;base64,{{ original_image }}" alt="Исходное изображение">
-            </div>
+        <div class="upload-form">
+            <label for="fileInput" class="camera-icon">
+                <i class="fas fa-camera"></i> Вставьте фотографию растения
+            </label>
+            <input type="file" id="fileInput" accept="image/*" hidden />
         </div>
-        {% endif %}
     </main>
 
     <footer>
         <div class="social-icons">
-            <a href="https://t.me/kitlool" class="icon"><i class="fab fa-telegram-plane"></i></a>
-            <a href="https://vk.com/looooooooooooooooo0ol" class="icon"><i class="fab fa-vk"></i></a>
-            <a href="https://discordapp.com/users/665869528026185739" class="icon"><i class="fab fa-discord"></i></a>
+            <a href="#" class="icon"><i class="fab fa-telegram-plane"></i></a>
+            <a href="#" class="icon"><i class="fab fa-vk"></i></a>
+            <a href="#" class="icon"><i class="fab fa-discord"></i></a>
         </div>
     </footer>
 
-    <!-- Подключаем JavaScript -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

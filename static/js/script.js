@@ -1,67 +1,83 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const btnAbout = document.getElementById('btnAbout');
-    const btnFeatures = document.getElementById('btnFeatures');
-    const logoLink = document.getElementById('logoLink');
-
-    btnAbout.addEventListener('click', function () {
-        toggleSection('about');
-    });
-
-    btnFeatures.addEventListener('click', function () {
-        toggleSection('features');
-    });
-
-    logoLink.addEventListener('click', function (e) {
-        e.preventDefault(); // предотвращаем переход по ссылке
-
-        // Применяем небольшие изменения стилей для визуального эффекта
-        document.querySelector('.wheat-left').style.transform = 'translateX(-20px) rotate(-10deg)';
-        document.querySelector('.wheat-right').style.transform = 'translateX(20px) rotate(10deg) scaleX(-1)';
-
-        // Пауза перед реальной перезагрузкой
-        setTimeout(function () {
-            window.location.reload();
-        }, 500); // Задержка 0.5 секунды
-    });
-
-    function toggleSection(sectionId) {
-        const welcomeSection = document.getElementById("welcome");
-        if (!welcomeSection.classList.contains("hidden")) {
-            welcomeSection.classList.add("hidden");
-        }
-
-        const sections = document.querySelectorAll('.animated-section');
-        sections.forEach(sec => sec.classList.add('hidden'));
-        document.getElementById(sectionId).classList.remove('hidden');
-    }
-});
-
 document.addEventListener('DOMContentLoaded', function() {
-    const logoLink = document.getElementById('logoLink');
-    
-    logoLink.addEventListener('click', function(e) {
-        e.preventDefault(); // предотвращаем переход по ссылке
-        
-        // Применяем небольшие изменения стилей для визуального эффекта
-        document.querySelector('.wheat-left').style.transform = 'translateX(-20px) rotate(-10deg)';
-        document.querySelector('.wheat-right').style.transform = 'translateX(20px) rotate(10deg) scaleX(-1)';
-        
-        // задерживаем реальную перезагрузку на полсекунды
-        setTimeout(() => {
-            location.reload();
-        }, 500);
-    });
-});
-
-// Добавляем JavaScript-код для отображения превью изображения при выборе файла
-document.getElementById('fileInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        document.getElementById('preview').src = e.target.result;
-        document.getElementById('preview').style.display = 'block';
+    // Безопасное получение элементов
+    const elements = {
+        btnAbout: document.getElementById('btnAbout'),
+        btnFeatures: document.getElementById('btnFeatures'),
+        logoLink: document.getElementById('logoLink'),
+        fileInput: document.getElementById('fileInput'),
+        welcomeSection: document.getElementById('welcome'),
+        preview: document.getElementById('preview')
     };
 
-    reader.readAsDataURL(file);
+    // Проверяем и инициализируем только существующие элементы
+    if (elements.btnAbout && elements.btnFeatures) {
+        // Обработчики кнопок навигации
+        elements.btnAbout.addEventListener('click', function() {
+            toggleSection('about');
+        });
+
+        elements.btnFeatures.addEventListener('click', function() {
+            toggleSection('features');
+        });
+    }
+
+    // Обработчик логотипа с проверкой
+    if (elements.logoLink) {
+        elements.logoLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Безопасное применение стилей
+            if (this.style) {
+                this.style.transform = 'scale(0.95)';
+            }
+            
+            if (document.body.style) {
+                document.body.style.cursor = 'wait';
+            }
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 200);
+        });
+    }
+
+    // Превью изображения с проверкой
+    if (elements.fileInput && elements.preview) {
+        elements.fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                elements.preview.src = e.target.result;
+                elements.preview.style.display = 'block';
+            };
+            
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Функция переключения секций
+    function toggleSection(sectionId) {
+        if (!elements.welcomeSection) return;
+        
+        // Скрываем welcome-секцию если она видна
+        if (!elements.welcomeSection.classList.contains('hidden')) {
+            elements.welcomeSection.classList.add('hidden');
+        }
+        
+        // Скрываем все анимированные секции
+        document.querySelectorAll('.animated-section').forEach(sec => {
+            if (sec.classList) {
+                sec.classList.add('hidden');
+            }
+        });
+        
+        // Показываем выбранную секцию
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection && targetSection.classList) {
+            targetSection.classList.remove('hidden');
+        }
+    }
 });
