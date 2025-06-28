@@ -10,7 +10,7 @@ model.load_state_dict(torch.load('saved_models/model_epoch_9.pt'))
 model.eval()  # Переключаем модель в режим evaluation
 
 # 2. Подготовка изображения
-image_path = 'test_images/first_network/example_image2.jpg'  # Ваш пример изображения
+image_path = 'test_images/first_network/3.jpg'  # Ваш пример изображения
 image = Image.open(image_path).convert('RGB')
 
 # Преобразуем изображение в тензор и нормируем
