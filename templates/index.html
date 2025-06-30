@@ -6,6 +6,7 @@
     <title>FloraSense</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/additional_styles.css') }}">
 </head>
 <body>
     <header>
@@ -24,7 +25,7 @@
         </div>
     </header>
 
-    <main>
+    <div id="main-content">
         <section id="welcome" class="animated-section">
             <h2>FloraSense — ваш надежный помощник в уходе за растениями!</h2>
         </section>
@@ -49,8 +50,34 @@
                 <i class="fas fa-camera"></i> Вставьте фотографию растения
             </label>
             <input type="file" id="fileInput" accept="image/*" hidden />
+            <div id="preview-container" class="hidden">
+                <img id="preview" alt="Предпросмотр изображения" />
+                <button id="submitImage" class="submit-button">Анализировать</button>
+            </div>
         </div>
-    </main>
+
+        <div class="centered-container">
+            <div id="results-container" class="hidden">
+                <h2>Результаты анализа</h2>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <h3>Исходное изображение</h3>
+                        <img id="original-image" src="" alt="Исходное изображение" />
+                    </div>
+                    <div class="result-item">
+                        <h3>Сегментация</h3>
+                        <img id="segmentation-image" src="" alt="Сегментация" />
+                    </div>
+                </div>
+                <div class="diagnosis-result">
+                    <h3>Диагноз:</h3>
+                    <p id="diagnosis-text"></p>
+                    <p id="probability-text"></p>
+                </div>
+                <button id="newAnalysis" class="submit-button">Новый анализ</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="social-icons">

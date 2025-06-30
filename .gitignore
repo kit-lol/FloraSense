@@ -11,8 +11,6 @@ data1/
 
 test_images/
 
-saved_models/model_epoch_9.pt
+saved_models/
 
-saved_models/model1_epoch_{}.pt
-
-saved_models/best_model.pth
+static/uploads

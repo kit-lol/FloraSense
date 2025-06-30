@@ -1,83 +1,152 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Безопасное получение элементов
-    const elements = {
-        btnAbout: document.getElementById('btnAbout'),
-        btnFeatures: document.getElementById('btnFeatures'),
-        logoLink: document.getElementById('logoLink'),
-        fileInput: document.getElementById('fileInput'),
-        welcomeSection: document.getElementById('welcome'),
-        preview: document.getElementById('preview')
-    };
+    // Элементы интерфейса
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('preview-container');
+    const preview = document.getElementById('preview');
+    const submitButton = document.getElementById('submitImage');
+    const welcomeSection = document.getElementById('welcome');
+    const aboutSection = document.getElementById('about');
+    const featuresSection = document.getElementById('features');
+    const uploadForm = document.querySelector('.upload-form');
+    const resultsContainer = document.getElementById('results-container');
+    const originalImage = document.getElementById('original-image');
+    const segmentationImage = document.getElementById('segmentation-image');
+    const diagnosisText = document.getElementById('diagnosis-text');
+    const probabilityText = document.getElementById('probability-text');
+    const newAnalysisButton = document.getElementById('newAnalysis');
+    const btnAbout = document.getElementById('btnAbout');
+    const btnFeatures = document.getElementById('btnFeatures');
+    const header = document.querySelector('header');
 
-    // Проверяем и инициализируем только существующие элементы
-    if (elements.btnAbout && elements.btnFeatures) {
-        // Обработчики кнопок навигации
-        elements.btnAbout.addEventListener('click', function() {
-            toggleSection('about');
-        });
+    // Фиксация шапки при прокрутке
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 30) {
+            header.classList.add('scrolled');
+            document.body.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+            document.body.classList.remove('scrolled');
+        }
+    });
 
-        elements.btnFeatures.addEventListener('click', function() {
-            toggleSection('features');
-        });
-    }
+    // Показ/скрытие информационных секций
+    btnAbout.addEventListener('click', function() {
+        if (aboutSection.classList.contains('hidden')) {
+            aboutSection.classList.remove('hidden');
+            welcomeSection.classList.add('hidden');
+            featuresSection.classList.add('hidden');
+        } else {
+            aboutSection.classList.add('hidden');
+            welcomeSection.classList.remove('hidden');
+        }
+    });
 
-    // Обработчик логотипа с проверкой
-    if (elements.logoLink) {
-        elements.logoLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Безопасное применение стилей
-            if (this.style) {
-                this.style.transform = 'scale(0.95)';
-            }
-            
-            if (document.body.style) {
-                document.body.style.cursor = 'wait';
-            }
-            
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 200);
-        });
-    }
+    btnFeatures.addEventListener('click', function() {
+        if (featuresSection.classList.contains('hidden')) {
+            featuresSection.classList.remove('hidden');
+            welcomeSection.classList.add('hidden');
+            aboutSection.classList.add('hidden');
+        } else {
+            featuresSection.classList.add('hidden');
+            welcomeSection.classList.remove('hidden');
+        }
+    });
 
-    // Превью изображения с проверкой
-    if (elements.fileInput && elements.preview) {
-        elements.fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
+    // Загрузка изображения
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
             const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                elements.preview.src = e.target.result;
-                elements.preview.style.display = 'block';
-            };
-            
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                previewContainer.classList.remove('hidden');
+            }
             reader.readAsDataURL(file);
+        }
+    });
+
+    // Отправка изображения на анализ
+    submitButton.addEventListener('click', function() {
+        if (!fileInput.files[0]) {
+            alert('Пожалуйста, выберите изображение');
+            return;
+        }
+
+        // Скрываем все секции
+        welcomeSection.classList.add('hidden');
+        aboutSection.classList.add('hidden');
+        featuresSection.classList.add('hidden');
+        uploadForm.classList.add('hidden');
+        previewContainer.classList.add('hidden');
+
+        // Показываем экран загрузки
+        showLoadingScreen();
+
+        // Формируем данные для отправки
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        // Отправляем запрос на сервер
+        fetch('/analyze', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Скрываем экран загрузки
+            hideLoadingScreen();
+
+            if (data.error) {
+                alert('Ошибка: ' + data.error);
+                return;
+            }
+
+            // Отображаем результаты
+            originalImage.src = URL.createObjectURL(fileInput.files[0]);
+            segmentationImage.src = data.segmentation_image;
+            diagnosisText.textContent = data.diagnosis;
+            probabilityText.textContent = `Точность: ${data.probability}%`;
+            resultsContainer.classList.remove('hidden');
+            
+            // Прокрутка к результатам
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => {
+            hideLoadingScreen();
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка: ' + error.message);
         });
+    });
+
+    // Кнопка нового анализа
+    newAnalysisButton.addEventListener('click', function() {
+        resultsContainer.classList.add('hidden');
+        welcomeSection.classList.remove('hidden');
+        uploadForm.classList.remove('hidden');
+        fileInput.value = '';
+        preview.style.display = 'none';
+        previewContainer.classList.add('hidden');
+        
+        // Прокрутка к началу
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Функции для экрана загрузки
+    function showLoadingScreen() {
+        const overlay = document.createElement('div');
+        overlay.className = 'loading-overlay';
+        overlay.innerHTML = '<div class="spinner"></div>';
+        document.body.appendChild(overlay);
     }
 
-    // Функция переключения секций
-    function toggleSection(sectionId) {
-        if (!elements.welcomeSection) return;
-        
-        // Скрываем welcome-секцию если она видна
-        if (!elements.welcomeSection.classList.contains('hidden')) {
-            elements.welcomeSection.classList.add('hidden');
-        }
-        
-        // Скрываем все анимированные секции
-        document.querySelectorAll('.animated-section').forEach(sec => {
-            if (sec.classList) {
-                sec.classList.add('hidden');
-            }
-        });
-        
-        // Показываем выбранную секцию
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection && targetSection.classList) {
-            targetSection.classList.remove('hidden');
-        }
+    function hideLoadingScreen() {
+        const overlay = document.querySelector('.loading-overlay');
+        if (overlay) overlay.remove();
     }
 });

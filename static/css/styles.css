@@ -1,4 +1,4 @@
-* Основные переменные цветов */
+/* Основные переменные цветов */
 :root {
     --green-light: #AFECCB;
     --green-dark: #4E7963;
@@ -22,23 +22,28 @@ body {
     background-color: var(--green-light);
     color: var(--black-text);
     min-height: 100vh;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-image: url('background.jpg'); 
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
+    transition: padding-top 0.3s ease;
+    padding-bottom: 80px; /* Отступ для футера */
 }
 
-/* Шапка header */
+/* Шапка header - всегда фиксированная */
 header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background-color: transparent;
-    padding: 15px 0;
+    background: rgba(255, 255, 255, 0);
+    padding: 16px 0;
     z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 /* Контент шапки */
@@ -52,9 +57,8 @@ header {
     position: relative;
 }
 
-/* Логотип с двумя колосками */
+/* Логотип */
 .logo-wrapper {
-    color: #E5D558;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,40 +66,29 @@ header {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    transition: all 0.3s ease;
 }
 
-.logo-wrapper:hover {
-    transform: translateX(-50%) scale(1.05);
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
 }
 
-.logo-wrapper:hover .wheat-left {
-    transform: translateX(-10px) rotate(-5deg);
+/* Эффект трансформации при наведении */
+.logo:hover {
+    transform: scale(1.04);
 }
 
-.logo-wrapper:hover .wheat-right {
-    transform: translateX(10px) rotate(5deg);
-}
-
-/* Заголовок H1 рядом с колосками */
+/* Заголовок H1 */
 header h1 {
     font-size: 45px;
     color: var(--gold);
     margin: 0 20px;
     white-space: nowrap;
     transition: all 0.3s ease;
-}
-
-/* Колоски слева и справа */
-.wheat-left, .wheat-right {
-    width: 40px;
-    height: 60px;
-    fill: var(--gold); /* Используем правильный цвет для заполнения */
-    transition: all 0.3s ease;
-}
-
-.wheat-right {
-    transform: scaleX(-1); /* Перевернутый колос */
 }
 
 /* Овал кнопки */
@@ -113,13 +106,6 @@ header h1 {
     min-width: 200px;
 }
 
-.oval-button:hover {
-    background-color: #e5d55889;
-    color: white;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
 /* Оформление заголовков и текста секций */
 section h2 {
     margin-bottom: 1rem;
@@ -130,32 +116,30 @@ section h2 {
     margin-bottom: 0.5rem;
 }
 
-/* Основная форма загрузки фото */
-.upload-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
-}
-
 /* Главный блок страницы */
-main {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#main-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    max-width: 600px;
+    width: 100%;
+    max-width: 1200px;
+    padding-top: 180px; /* Увеличенный отступ сверху */
+    padding-bottom: 50px; /* Отступ снизу */
+    transition: padding-top 0.3s ease;
+    min-height: calc(100vh - 180px); /* Гарантируем минимальную высоту */
 }
 
 /* Анимированные разделы */
 .animated-section {
     animation: slide-up 0.5s ease-out both;
-    background-color: rgba(247, 249, 201, 0.884);
+    background-color: rgb(247, 249, 201);
     color: black;
+    max-width: 600px;
+    width: 90%;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--shadow-color);
+    margin-bottom: 2rem;
 }
 
 @keyframes slide-up {
@@ -170,14 +154,18 @@ main {
 
 /* Подвал footer */
 footer {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    right: 2rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0);
+    padding: 15px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .social-icons {
@@ -195,25 +183,8 @@ footer {
 }
 
 .icon:hover {
-    color: var(--green-light);
+    color:#e7e2bd
 }
-
-/* Дополнительная анимация колосков */
-@keyframes floatWaves {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(8px); }
-}
-
-.wheat-left {
-    animation: floatWaves 3s ease-in-out infinite alternate;
-}
-
-.wheat-right {
-    animation: floatWaves 3s ease-in-out infinite alternate reverse;
-}
-
-/* Устраняем лишние дублирования правил */
-/* * Удалено лишнее правило ".nav-button:first-child" и ":last-child", * которое накладывалось на кнопки. */
 
 /* Отступы между элементами */
 section {
@@ -225,147 +196,45 @@ section {
     max-width: 400px;
 }
 
-/* Хлебные крошки анимации */
-@keyframes fadeInOut {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
-}
-
-@keyframes growUp {
-    0% { transform: scale(0.9); }
-    100% { transform: scale(1); }
-}
-
-/* Заключение общего оформления */
-/* Остальное оформление сохраняется стандартным и стабильным */
-
-main {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-width: 600px;
-}
-
-section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px var(--shadow-color);
-    background-color: white;
-    max-width: 400px;
-}
-
-section h2 {
-    margin-bottom: 1rem;
-}
-
-.feature-list li {
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-}
-
-.upload-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
-}
-
-.camera-icon {
-    font-size: 2em;
-    color: rgba(237, 213, 75, 0.927);
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    padding: 10px 20px;
-    border: 2px solid rgba(237, 213, 75, 0.63);
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-/* Камера отдельно увеличивается при наведении */
-.camera-icon i.fas {
-    margin-right: 10px;
-    transition: transform 0.3s ease;
-}
-
-.camera-icon:hover i.fas {
-    transform: scale(1.1);
-}
-
-.camera-icon:hover {
-    background-color: rgba(255, 255, 0, 0.03);
-}
-
-footer {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    right: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.social-icons {
-    display: flex;
-    justify-content: space-between;
+/* Загрузочный экран */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 300px;
-    margin-bottom: 1rem;
-}
-
-.icon {
-    font-size: 1.5em;
-    color: rgb(237, 213, 75);
-    transition: color 0.3s ease;
-}
-
-.icon:hover {
-    color: white;
-}
-
-@keyframes fade-in {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Кнопка перезагрузки (логотип): базовое состояние */
-.logo {
-    display: inline-flex;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.1s ease;
+    z-index: 1000;
 }
 
-/* Эффект трансформации при наведении */
-.logo:hover {
-    transform: scale(1.001);
+.spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #E5D558;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
 }
 
-/* Базовая позиция колосьев */
-.wheat-left, .wheat-right {
-    width: 40px;
-    height: 60px;
-    fill: var(--gold);
-    transition: transform 0.3s ease;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Положение колосьев при наведении */
-.logo:hover .wheat-left {
-    transform: translateX(-10px) rotate(-5deg);
+/* Анимация при скролле - уменьшаем шапку */
+header.scrolled {
+    padding: 15px 0;
+    background-color: #756b2bf8;
 }
 
-.logo:hover .wheat-right {
-    transform: translateX(10px) rotate(5deg);
+header.scrolled .logo-wrapper h1 {
+    font-size: 52px;
+}
+
+/* Уменьшаем отступ при скролле */
+body.scrolled #main-content {
+    padding-top: 150px;
 }
